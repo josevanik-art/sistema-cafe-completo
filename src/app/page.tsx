@@ -194,6 +194,8 @@ const colors = [
 const backgroundColors = [
   { name: 'Branco Clássico', value: 'bg-white', preview: 'bg-white' },
   { name: 'Cinza Claro', value: 'bg-gray-50', preview: 'bg-gray-50' },
+  { name: 'Cinza Escuro', value: 'bg-gray-800', preview: 'bg-gray-800' },
+  { name: 'Preto', value: 'bg-black', preview: 'bg-black' },
   { name: 'Azul Suave', value: 'bg-blue-50', preview: 'bg-blue-50' },
   { name: 'Verde Suave', value: 'bg-green-50', preview: 'bg-green-50' },
   { name: 'Âmbar Suave', value: 'bg-amber-50', preview: 'bg-amber-50' },
@@ -1109,8 +1111,13 @@ export default function CoffeeManagementSystem() {
   const totalFinanciamento = transactions.filter(t => t.type === 'financiamento').reduce((sum, t) => sum + t.amount, 0)
   const totalRecolha = transactions.filter(t => t.type === 'recolha').reduce((sum, t) => sum + t.quantity, 0)
 
+  // Determinar se o fundo é escuro para ajustar cores do texto
+  const isDarkBackground = settings.backgroundColor === 'bg-gray-800' || settings.backgroundColor === 'bg-black'
+  const textColorClass = isDarkBackground ? 'text-white' : 'text-gray-900'
+  const cardColorClass = isDarkBackground ? 'bg-gray-700 border-gray-600' : 'bg-white'
+
   return (
-    <div className={`min-h-screen ${settings.backgroundColor}`}>
+    <div className={`min-h-screen ${settings.backgroundColor} ${textColorClass}`}>
       {/* Header */}
       <header className={`bg-gradient-to-r ${settings.primaryColor} text-white shadow-lg`}>
         <div className="container mx-auto px-4 py-6">
@@ -1146,7 +1153,7 @@ export default function CoffeeManagementSystem() {
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           {/* Navigation Tabs */}
-          <TabsList className="grid w-full grid-cols-7 lg:w-auto lg:grid-cols-7">
+          <TabsList className={`grid w-full grid-cols-7 lg:w-auto lg:grid-cols-7 ${isDarkBackground ? 'bg-gray-700' : ''}`}>
             <TabsTrigger value="dashboard" className="flex items-center space-x-2">
               <TrendingUp className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -1180,9 +1187,9 @@ export default function CoffeeManagementSystem() {
           {/* Dashboard Tab */}
           <TabsContent value="dashboard" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Vendas</CardTitle>
+                  <CardTitle className={`text-sm font-medium ${textColorClass}`}>Total Vendas</CardTitle>
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1193,9 +1200,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Compras</CardTitle>
+                  <CardTitle className={`text-sm font-medium ${textColorClass}`}>Total Compras</CardTitle>
                   <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1206,9 +1213,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Financiamentos</CardTitle>
+                  <CardTitle className={`text-sm font-medium ${textColorClass}`}>Financiamentos</CardTitle>
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1219,9 +1226,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Café Recolhido</CardTitle>
+                  <CardTitle className={`text-sm font-medium ${textColorClass}`}>Café Recolhido</CardTitle>
                   <Coffee className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1232,9 +1239,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Estoque Total</CardTitle>
+                  <CardTitle className={`text-sm font-medium ${textColorClass}`}>Estoque Total</CardTitle>
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1245,9 +1252,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Café Financiado</CardTitle>
+                  <CardTitle className={`text-sm font-medium ${textColorClass}`}>Café Financiado</CardTitle>
                   <Calculator className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -1260,9 +1267,9 @@ export default function CoffeeManagementSystem() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle>Transações Recentes</CardTitle>
+                  <CardTitle className={textColorClass}>Transações Recentes</CardTitle>
                   <CardDescription>Últimas movimentações e seus efeitos no sistema</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1301,7 +1308,7 @@ export default function CoffeeManagementSystem() {
                         return (
                           <div key={transaction.id} className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium">{partner?.name}</p>
+                              <p className={`font-medium ${textColorClass}`}>{partner?.name}</p>
                               <p className="text-sm text-muted-foreground capitalize">
                                 {transaction.type} - {bank?.name} - {transaction.status}
                               </p>
@@ -1311,7 +1318,7 @@ export default function CoffeeManagementSystem() {
                               <p className={`text-xs ${effectColor}`}>{effect}</p>
                             </div>
                             <div className="text-right">
-                              <p className="font-medium">{formatCurrency(transaction.amount)}</p>
+                              <p className={`font-medium ${textColorClass}`}>{formatCurrency(transaction.amount)}</p>
                               <p className="text-sm text-muted-foreground">{transaction.date}</p>
                             </div>
                           </div>
@@ -1322,24 +1329,24 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle>Resumo de Estoque e Financiamento</CardTitle>
+                  <CardTitle className={textColorClass}>Resumo de Estoque e Financiamento</CardTitle>
                   <CardDescription>Distribuição do café disponível e financiado</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold mb-2">Estoque Físico</h4>
+                      <h4 className={`font-semibold mb-2 ${textColorClass}`}>Estoque Físico</h4>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span>Café Comercial</span>
+                          <span className={textColorClass}>Café Comercial</span>
                           <Badge variant="secondary">
                             {coffeeStock.comercialQuantity.toLocaleString()} kg
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span>Café Côco</span>
+                          <span className={textColorClass}>Café Côco</span>
                           <Badge variant="secondary">
                             {coffeeStock.cocoQuantity.toLocaleString()} kg
                           </Badge>
@@ -1348,16 +1355,16 @@ export default function CoffeeManagementSystem() {
                     </div>
                     <Separator />
                     <div>
-                      <h4 className="font-semibold mb-2">Café Financiado (Por Recolher)</h4>
+                      <h4 className={`font-semibold mb-2 ${textColorClass}`}>Café Financiado (Por Recolher)</h4>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span>Comercial Financiado</span>
+                          <span className={textColorClass}>Comercial Financiado</span>
                           <Badge variant="outline" className="bg-amber-50 text-amber-700">
                             {coffeeStock.financedComercial.toLocaleString()} kg
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span>Côco Financiado</span>
+                          <span className={textColorClass}>Côco Financiado</span>
                           <Badge variant="outline" className="bg-amber-50 text-amber-700">
                             {coffeeStock.financedCoco.toLocaleString()} kg
                           </Badge>
@@ -1366,13 +1373,13 @@ export default function CoffeeManagementSystem() {
                     </div>
                     <Separator />
                     <div className="flex items-center justify-between font-medium">
-                      <span>Total Disponível</span>
+                      <span className={textColorClass}>Total Disponível</span>
                       <Badge variant="default">
                         {coffeeStock.totalQuantity.toLocaleString()} kg
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between font-medium">
-                      <span>Total Financiado</span>
+                      <span className={textColorClass}>Total Financiado</span>
                       <Badge variant="outline" className="bg-amber-100 text-amber-800">
                         {coffeeStock.financedQuantity.toLocaleString()} kg
                       </Badge>
@@ -1386,13 +1393,13 @@ export default function CoffeeManagementSystem() {
           {/* Stock Tab */}
           <TabsContent value="stock" className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-bold">Controle de Estoque</h2>
+              <h2 className={`text-2xl font-bold ${textColorClass}`}>Controle de Estoque</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Estoque Total</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Estoque Total</CardTitle>
                   <CardDescription>Quantidade total de café disponível</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1407,9 +1414,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Café Comercial</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Café Comercial</CardTitle>
                   <CardDescription>Estoque de café comercial</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1424,9 +1431,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Café Côco</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Café Côco</CardTitle>
                   <CardDescription>Estoque de café côco</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1441,9 +1448,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Café Financiado</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Café Financiado</CardTitle>
                   <CardDescription>Quantidade por recolher</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1459,15 +1466,15 @@ export default function CoffeeManagementSystem() {
               </Card>
             </div>
 
-            <Card>
+            <Card className={cardColorClass}>
               <CardHeader>
-                <CardTitle>Status do Estoque</CardTitle>
+                <CardTitle className={textColorClass}>Status do Estoque</CardTitle>
                 <CardDescription>Situação atual do estoque e café financiado</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-semibold mb-4">Estoque Físico Disponível</h4>
+                    <h4 className={`font-semibold mb-4 ${textColorClass}`}>Estoque Físico Disponível</h4>
                     <div className="space-y-3">
                       <div className={`p-4 rounded-lg border ${
                         coffeeStock.totalQuantity > 1000 
@@ -1500,7 +1507,7 @@ export default function CoffeeManagementSystem() {
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-4">Café Financiado (Por Recolher)</h4>
+                    <h4 className={`font-semibold mb-4 ${textColorClass}`}>Café Financiado (Por Recolher)</h4>
                     <div className="space-y-3">
                       <div className={`p-4 rounded-lg border ${
                         coffeeStock.financedQuantity > 0 
@@ -1527,9 +1534,9 @@ export default function CoffeeManagementSystem() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className={cardColorClass}>
               <CardHeader>
-                <CardTitle>Movimentações de Estoque</CardTitle>
+                <CardTitle className={textColorClass}>Movimentações de Estoque</CardTitle>
                 <CardDescription>Todas as operações que afetaram o estoque de café</CardDescription>
               </CardHeader>
               <CardContent>
@@ -1617,7 +1624,7 @@ export default function CoffeeManagementSystem() {
           {/* Transactions Tab */}
           <TabsContent value="transactions" className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-bold">Gestão de Transações</h2>
+              <h2 className={`text-2xl font-bold ${textColorClass}`}>Gestão de Transações</h2>
               <Dialog open={isTransactionModalOpen} onOpenChange={setIsTransactionModalOpen}>
                 <DialogTrigger asChild>
                   <Button className={`bg-gradient-to-r ${settings.primaryColor}`}>
@@ -1835,9 +1842,9 @@ export default function CoffeeManagementSystem() {
               </Dialog>
             </div>
 
-            <Card>
+            <Card className={cardColorClass}>
               <CardHeader>
-                <CardTitle>Lista de Transações</CardTitle>
+                <CardTitle className={textColorClass}>Lista de Transações</CardTitle>
                 <CardDescription>Todas as operações registradas no sistema com seus efeitos</CardDescription>
               </CardHeader>
               <CardContent>
@@ -1950,7 +1957,7 @@ export default function CoffeeManagementSystem() {
           {/* Partners Tab */}
           <TabsContent value="partners" className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-bold">Gestão de Parceiros</h2>
+              <h2 className={`text-2xl font-bold ${textColorClass}`}>Gestão de Parceiros</h2>
               <Dialog open={isPartnerModalOpen} onOpenChange={setIsPartnerModalOpen}>
                 <DialogTrigger asChild>
                   <Button className={`bg-gradient-to-r ${settings.primaryColor}`}>
@@ -2050,10 +2057,10 @@ export default function CoffeeManagementSystem() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {partners.map((partner) => (
-                <Card key={partner.id}>
+                <Card key={partner.id} className={cardColorClass}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{partner.name}</CardTitle>
+                      <CardTitle className={`text-lg ${textColorClass}`}>{partner.name}</CardTitle>
                       <Badge variant={partner.type === 'fornecedor' ? 'default' : 'secondary'}>
                         {partner.type}
                       </Badge>
@@ -2101,7 +2108,7 @@ export default function CoffeeManagementSystem() {
           {/* Banks Tab */}
           <TabsContent value="banks" className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-bold">Gestão de Bancos</h2>
+              <h2 className={`text-2xl font-bold ${textColorClass}`}>Gestão de Bancos</h2>
               <Dialog open={isBankModalOpen} onOpenChange={setIsBankModalOpen}>
                 <DialogTrigger asChild>
                   <Button className={`bg-gradient-to-r ${settings.primaryColor}`}>
@@ -2182,10 +2189,10 @@ export default function CoffeeManagementSystem() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {banks.map((bank) => (
-                <Card key={bank.id}>
+                <Card key={bank.id} className={cardColorClass}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{bank.name}</CardTitle>
+                      <CardTitle className={`text-lg ${textColorClass}`}>{bank.name}</CardTitle>
                       <Building2 className="h-5 w-5 text-muted-foreground" />
                     </div>
                   </CardHeader>
@@ -2193,7 +2200,7 @@ export default function CoffeeManagementSystem() {
                     <div className="space-y-3">
                       <div>
                         <p className="text-sm text-muted-foreground">Número da Conta</p>
-                        <p className="font-medium">{bank.accountNumber}</p>
+                        <p className={`font-medium ${textColorClass}`}>{bank.accountNumber}</p>
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Saldo Atual</p>
@@ -2207,13 +2214,13 @@ export default function CoffeeManagementSystem() {
                       {bank.iban && (
                         <div>
                           <p className="text-sm text-muted-foreground">IBAN</p>
-                          <p className="font-mono text-sm">{bank.iban}</p>
+                          <p className={`font-mono text-sm ${textColorClass}`}>{bank.iban}</p>
                         </div>
                       )}
                       {bank.swift && (
                         <div>
                           <p className="text-sm text-muted-foreground">SWIFT</p>
-                          <p className="font-mono text-sm">{bank.swift}</p>
+                          <p className={`font-mono text-sm ${textColorClass}`}>{bank.swift}</p>
                         </div>
                       )}
                       <div className="flex justify-end space-x-1 pt-2">
@@ -2242,7 +2249,7 @@ export default function CoffeeManagementSystem() {
           {/* Reports Tab */}
           <TabsContent value="reports" className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-bold">Relatórios</h2>
+              <h2 className={`text-2xl font-bold ${textColorClass}`}>Relatórios</h2>
               <div className="flex space-x-2">
                 <Dialog open={isFiltersModalOpen} onOpenChange={setIsFiltersModalOpen}>
                   <DialogTrigger asChild>
@@ -2361,18 +2368,18 @@ export default function CoffeeManagementSystem() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card 
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                className={`cursor-pointer hover:shadow-lg transition-shadow ${cardColorClass}`}
                 onClick={() => openReport('semanal')}
               >
                 <CardHeader>
-                  <CardTitle className="text-lg">Relatório Semanal</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Relatório Semanal</CardTitle>
                   <CardDescription>Resumo dos últimos 7 dias</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <Calendar className="h-8 w-8 text-green-500" />
                     <div className="text-right">
-                      <p className="text-2xl font-bold">7 Dias</p>
+                      <p className={`text-2xl font-bold ${textColorClass}`}>7 Dias</p>
                       <p className="text-sm text-muted-foreground">
                         Semana atual
                       </p>
@@ -2382,18 +2389,18 @@ export default function CoffeeManagementSystem() {
               </Card>
 
               <Card 
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                className={`cursor-pointer hover:shadow-lg transition-shadow ${cardColorClass}`}
                 onClick={() => openReport('mensal')}
               >
                 <CardHeader>
-                  <CardTitle className="text-lg">Relatório Mensal</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Relatório Mensal</CardTitle>
                   <CardDescription>Dados do mês corrente</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <Calendar className="h-8 w-8 text-orange-500" />
                     <div className="text-right">
-                      <p className="text-2xl font-bold">Mês</p>
+                      <p className={`text-2xl font-bold ${textColorClass}`}>Mês</p>
                       <p className="text-sm text-muted-foreground">
                         {new Date().toLocaleDateString('pt-AO', { month: 'long' })}
                       </p>
@@ -2403,18 +2410,18 @@ export default function CoffeeManagementSystem() {
               </Card>
 
               <Card 
-                className="cursor-pointer hover:shadow-lg transition-shadow"
+                className={`cursor-pointer hover:shadow-lg transition-shadow ${cardColorClass}`}
                 onClick={() => openReport('anual')}
               >
                 <CardHeader>
-                  <CardTitle className="text-lg">Relatório Anual</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Relatório Anual</CardTitle>
                   <CardDescription>Balanço do ano</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <Calendar className="h-8 w-8 text-purple-500" />
                     <div className="text-right">
-                      <p className="text-2xl font-bold">{new Date().getFullYear()}</p>
+                      <p className={`text-2xl font-bold ${textColorClass}`}>{new Date().getFullYear()}</p>
                       <p className="text-sm text-muted-foreground">
                         Ano corrente
                       </p>
@@ -2423,94 +2430,94 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <Card className={`cursor-pointer hover:shadow-lg transition-shadow ${cardColorClass}`}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Relatório por Tipo de Café</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Relatório por Tipo de Café</CardTitle>
                   <CardDescription>Análise por tipo de café</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-sm">Comercial:</span>
-                      <span className="text-sm font-medium">{coffeeStock.comercialQuantity} kg</span>
+                      <span className={`text-sm ${textColorClass}`}>Comercial:</span>
+                      <span className={`text-sm font-medium ${textColorClass}`}>{coffeeStock.comercialQuantity} kg</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm">Côco:</span>
-                      <span className="text-sm font-medium">{coffeeStock.cocoQuantity} kg</span>
+                      <span className={`text-sm ${textColorClass}`}>Côco:</span>
+                      <span className={`text-sm font-medium ${textColorClass}`}>{coffeeStock.cocoQuantity} kg</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm">Financiado:</span>
-                      <span className="text-sm font-medium">{coffeeStock.financedQuantity} kg</span>
+                      <span className={`text-sm ${textColorClass}`}>Financiado:</span>
+                      <span className={`text-sm font-medium ${textColorClass}`}>{coffeeStock.financedQuantity} kg</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <Card>
+            <Card className={cardColorClass}>
               <CardHeader>
-                <CardTitle>Resumo Geral por Tipo de Café</CardTitle>
+                <CardTitle className={textColorClass}>Resumo Geral por Tipo de Café</CardTitle>
                 <CardDescription>Análise detalhada das operações por tipo de café</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-semibold mb-4">Café Comercial</h4>
+                    <h4 className={`font-semibold mb-4 ${textColorClass}`}>Café Comercial</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Estoque atual:</span>
-                        <span className="font-medium">{coffeeStock.comercialQuantity} kg</span>
+                        <span className={textColorClass}>Estoque atual:</span>
+                        <span className={`font-medium ${textColorClass}`}>{coffeeStock.comercialQuantity} kg</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Financiado (por recolher):</span>
+                        <span className={textColorClass}>Financiado (por recolher):</span>
                         <span className="font-medium text-amber-600">{coffeeStock.financedComercial} kg</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Vendas (Comercial):</span>
-                        <span className="font-medium">
+                        <span className={textColorClass}>Vendas (Comercial):</span>
+                        <span className={`font-medium ${textColorClass}`}>
                           {transactions.filter(t => t.type === 'venda' && t.coffeeType === 'comercial').reduce((sum, t) => sum + t.quantity, 0)} kg
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Compras (Comercial):</span>
-                        <span className="font-medium">
+                        <span className={textColorClass}>Compras (Comercial):</span>
+                        <span className={`font-medium ${textColorClass}`}>
                           {transactions.filter(t => t.type === 'compra' && t.coffeeType === 'comercial').reduce((sum, t) => sum + t.quantity, 0)} kg
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Recolhas (Comercial):</span>
-                        <span className="font-medium">
+                        <span className={textColorClass}>Recolhas (Comercial):</span>
+                        <span className={`font-medium ${textColorClass}`}>
                           {transactions.filter(t => t.type === 'recolha' && t.coffeeType === 'comercial').reduce((sum, t) => sum + t.quantity, 0)} kg
                         </span>
                       </div>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-4">Café Côco</h4>
+                    <h4 className={`font-semibold mb-4 ${textColorClass}`}>Café Côco</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span>Estoque atual:</span>
-                        <span className="font-medium">{coffeeStock.cocoQuantity} kg</span>
+                        <span className={textColorClass}>Estoque atual:</span>
+                        <span className={`font-medium ${textColorClass}`}>{coffeeStock.cocoQuantity} kg</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Financiado (por recolher):</span>
+                        <span className={textColorClass}>Financiado (por recolher):</span>
                         <span className="font-medium text-amber-600">{coffeeStock.financedCoco} kg</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Vendas (Côco):</span>
-                        <span className="font-medium">
+                        <span className={textColorClass}>Vendas (Côco):</span>
+                        <span className={`font-medium ${textColorClass}`}>
                           {transactions.filter(t => t.type === 'venda' && t.coffeeType === 'coco').reduce((sum, t) => sum + t.quantity, 0)} kg
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Compras (Côco):</span>
-                        <span className="font-medium">
+                        <span className={textColorClass}>Compras (Côco):</span>
+                        <span className={`font-medium ${textColorClass}`}>
                           {transactions.filter(t => t.type === 'compra' && t.coffeeType === 'coco').reduce((sum, t) => sum + t.quantity, 0)} kg
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Recolhas (Côco):</span>
-                        <span className="font-medium">
+                        <span className={textColorClass}>Recolhas (Côco):</span>
+                        <span className={`font-medium ${textColorClass}`}>
                           {transactions.filter(t => t.type === 'recolha' && t.coffeeType === 'coco').reduce((sum, t) => sum + t.quantity, 0)} kg
                         </span>
                       </div>
@@ -2523,12 +2530,12 @@ export default function CoffeeManagementSystem() {
 
           {/* Finance Tab */}
           <TabsContent value="finance" className="space-y-6">
-            <h2 className="text-2xl font-bold">Gestão Financeira</h2>
+            <h2 className={`text-2xl font-bold ${textColorClass}`}>Gestão Financeira</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Receitas</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Receitas</CardTitle>
                   <CardDescription>Total de entradas (vendas)</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2541,9 +2548,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Despesas</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Despesas</CardTitle>
                   <CardDescription>Total de saídas (compras + financiamentos)</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2556,9 +2563,9 @@ export default function CoffeeManagementSystem() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={cardColorClass}>
                 <CardHeader>
-                  <CardTitle className="text-lg">Lucro Líquido</CardTitle>
+                  <CardTitle className={`text-lg ${textColorClass}`}>Lucro Líquido</CardTitle>
                   <CardDescription>Receitas - Despesas</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2572,9 +2579,9 @@ export default function CoffeeManagementSystem() {
               </Card>
             </div>
 
-            <Card>
+            <Card className={cardColorClass}>
               <CardHeader>
-                <CardTitle>Saldos Bancários</CardTitle>
+                <CardTitle className={textColorClass}>Saldos Bancários</CardTitle>
                 <CardDescription>Posição atual das contas (atualizada automaticamente pelas transações)</CardDescription>
               </CardHeader>
               <CardContent>
@@ -2582,7 +2589,7 @@ export default function CoffeeManagementSystem() {
                   {banks.map((bank) => (
                     <div key={bank.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
-                        <p className="font-medium">{bank.name}</p>
+                        <p className={`font-medium ${textColorClass}`}>{bank.name}</p>
                         <p className="text-sm text-muted-foreground">
                           Conta: {bank.accountNumber}
                         </p>
@@ -2599,7 +2606,7 @@ export default function CoffeeManagementSystem() {
                   ))}
                   <div className="border-t pt-4">
                     <div className="flex items-center justify-between">
-                      <p className="font-bold">Total Disponível</p>
+                      <p className={`font-bold ${textColorClass}`}>Total Disponível</p>
                       <p className="text-2xl font-bold text-green-600">
                         {formatCurrency(banks.reduce((sum, bank) => sum + bank.balance, 0))}
                       </p>
@@ -2609,15 +2616,15 @@ export default function CoffeeManagementSystem() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className={cardColorClass}>
               <CardHeader>
-                <CardTitle>Resumo dos Efeitos das Transações</CardTitle>
+                <CardTitle className={textColorClass}>Resumo dos Efeitos das Transações</CardTitle>
                 <CardDescription>Como cada tipo de transação afeta o sistema</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h4 className="font-semibold">Efeitos no Saldo Bancário:</h4>
+                    <h4 className={`font-semibold ${textColorClass}`}>Efeitos no Saldo Bancário:</h4>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between p-2 bg-green-50 rounded">
                         <span className="text-sm">Vendas</span>
@@ -2638,7 +2645,7 @@ export default function CoffeeManagementSystem() {
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <h4 className="font-semibold">Efeitos no Estoque:</h4>
+                    <h4 className={`font-semibold ${textColorClass}`}>Efeitos no Estoque:</h4>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between p-2 bg-green-50 rounded">
                         <span className="text-sm">Compras</span>
