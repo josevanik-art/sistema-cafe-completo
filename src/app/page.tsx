@@ -55,10 +55,15 @@ interface Partner {
 interface Bank {
   id: string
   name: string
+  accountName: string
   accountNumber: string
   iban: string
-  swift: string
+  currency: string
+  accountType: string
+  initialBalance: number
   balance: number
+  phone: string
+  address: string
 }
 
 interface Transaction {
@@ -151,10 +156,15 @@ const initialBanks: Bank[] = [
   {
     id: '1',
     name: 'Banco BAI',
+    accountName: 'CoffeeSystem Pro',
     accountNumber: '123456789',
     iban: 'AO06000000123456789',
-    swift: 'BAIAAOAO',
-    balance: 2500000
+    currency: 'AOA',
+    accountType: 'Conta Corrente',
+    initialBalance: 2500000,
+    balance: 2500000,
+    phone: '+244 222 123 456',
+    address: 'Rua Rainha Ginga, Luanda'
   }
 ]
 
@@ -199,6 +209,15 @@ const currencies = [
   { code: 'STN', name: 'Dobra de São Tomé', symbol: 'Db' },
   { code: 'XOF', name: 'Franco CFA Ocidental', symbol: 'CFA' },
   { code: 'XAF', name: 'Franco CFA Central', symbol: 'FCFA' }
+]
+
+const accountTypes = [
+  'Conta Corrente',
+  'Conta Poupança',
+  'Conta Empresarial',
+  'Conta de Investimento',
+  'Conta Salário',
+  'Conta Digital'
 ]
 
 const colors = [
@@ -1534,14 +1553,19 @@ export default function CoffeeManagementSystem() {
 
   // Funções para Bancos
   const addBank = () => {
-    if (newBank.name && newBank.accountNumber) {
+    if (newBank.name && newBank.accountName && newBank.accountNumber) {
       const bank: Bank = {
         id: Date.now().toString(),
         name: newBank.name,
+        accountName: newBank.accountName,
         accountNumber: newBank.accountNumber,
         iban: newBank.iban || '',
-        swift: newBank.swift || '',
-        balance: newBank.balance || 0
+        currency: newBank.currency || 'AOA',
+        accountType: newBank.accountType || 'Conta Corrente',
+        initialBalance: newBank.initialBalance || 0,
+        balance: newBank.initialBalance || 0,
+        phone: newBank.phone || '',
+        address: newBank.address || ''
       }
       setBanks([...banks, bank])
       setNewBank({})
@@ -1556,14 +1580,19 @@ export default function CoffeeManagementSystem() {
   }
 
   const updateBank = () => {
-    if (editingBank && newBank.name && newBank.accountNumber) {
+    if (editingBank && newBank.name && newBank.accountName && newBank.accountNumber) {
       const updatedBank: Bank = {
         ...editingBank,
         name: newBank.name,
+        accountName: newBank.accountName,
         accountNumber: newBank.accountNumber,
         iban: newBank.iban || '',
-        swift: newBank.swift || '',
-        balance: newBank.balance || 0
+        currency: newBank.currency || 'AOA',
+        accountType: newBank.accountType || 'Conta Corrente',
+        initialBalance: newBank.initialBalance || 0,
+        balance: newBank.balance || editingBank.balance,
+        phone: newBank.phone || '',
+        address: newBank.address || ''
       }
       setBanks(banks.map(b => b.id === editingBank.id ? updatedBank : b))
       setNewBank({})
@@ -3042,7 +3071,7 @@ export default function CoffeeManagementSystem() {
                     Novo Banco
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>
                       {editingBank ? 'Editar Conta Bancária' : 'Adicionar Nova Conta Bancária'}
@@ -3052,34 +3081,33 @@ export default function CoffeeManagementSystem() {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
-                    <div>
-                      <Label htmlFor="bankName">Nome do Banco</Label>
-                      <Input
-                        placeholder="Ex: Banco BAI"
-                        value={newBank.name || ''}
-                        onChange={(e) => setNewBank({...newBank, name: e.target.value})}
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="bankName">Nome do Banco</Label>
+                        <Input
+                          placeholder="Ex: Banco BAI"
+                          value={newBank.name || ''}
+                          onChange={(e) => setNewBank({...newBank, name: e.target.value})}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="accountName">Nome da Conta</Label>
+                        <Input
+                          placeholder="Ex: CoffeeSystem Pro"
+                          value={newBank.accountName || ''}
+                          onChange={(e) => setNewBank({...newBank, accountName: e.target.value})}
+                        />
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="accountNumber">Número da Conta</Label>
+                        <Label htmlFor="accountNumber">N.º da Conta</Label>
                         <Input
                           placeholder="123456789"
                           value={newBank.accountNumber || ''}
                           onChange={(e) => setNewBank({...newBank, accountNumber: e.target.value})}
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="balance">Saldo</Label>
-                        <Input
-                          type="number"
-                          placeholder="0.00"
-                          value={newBank.balance || ''}
-                          onChange={(e) => setNewBank({...newBank, balance: parseFloat(e.target.value)})}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="iban">IBAN</Label>
                         <Input
@@ -3088,14 +3116,66 @@ export default function CoffeeManagementSystem() {
                           onChange={(e) => setNewBank({...newBank, iban: e.target.value})}
                         />
                       </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="swift">SWIFT</Label>
-                        <Input
-                          placeholder="BAIAAOAO"
-                          value={newBank.swift || ''}
-                          onChange={(e) => setNewBank({...newBank, swift: e.target.value})}
-                        />
+                        <Label htmlFor="currency">Moeda</Label>
+                        <Select value={newBank.currency} onValueChange={(value) => setNewBank({...newBank, currency: value})}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione a moeda" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60">
+                            {currencies.map((currency) => (
+                              <SelectItem key={currency.code} value={currency.code}>
+                                {currency.symbol} - {currency.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
+                      <div>
+                        <Label htmlFor="accountType">Tipo de Conta</Label>
+                        <Select value={newBank.accountType} onValueChange={(value) => setNewBank({...newBank, accountType: value})}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {accountTypes.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {type}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="initialBalance">Saldo Inicial</Label>
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        value={newBank.initialBalance || ''}
+                        onChange={(e) => setNewBank({...newBank, initialBalance: parseFloat(e.target.value)})}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        O saldo será atualizado automaticamente pelas transações
+                      </p>
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Telefone</Label>
+                      <Input
+                        placeholder="+244 222 123 456"
+                        value={newBank.phone || ''}
+                        onChange={(e) => setNewBank({...newBank, phone: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="address">Endereço</Label>
+                      <Input
+                        placeholder="Rua Rainha Ginga, Luanda"
+                        value={newBank.address || ''}
+                        onChange={(e) => setNewBank({...newBank, address: e.target.value})}
+                      />
                     </div>
                   </div>
                   <div className="flex justify-end space-x-2">
@@ -3125,6 +3205,10 @@ export default function CoffeeManagementSystem() {
                   <CardContent>
                     <div className="space-y-3">
                       <div>
+                        <p className="text-sm text-muted-foreground">Nome da Conta</p>
+                        <p className={`font-medium ${textColorClass}`}>{bank.accountName}</p>
+                      </div>
+                      <div>
                         <p className="text-sm text-muted-foreground">Número da Conta</p>
                         <p className={`font-medium ${textColorClass}`}>{bank.accountNumber}</p>
                       </div>
@@ -3143,10 +3227,28 @@ export default function CoffeeManagementSystem() {
                           <p className={`font-mono text-sm ${textColorClass}`}>{bank.iban}</p>
                         </div>
                       )}
-                      {bank.swift && (
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-sm text-muted-foreground">SWIFT</p>
-                          <p className={`font-mono text-sm ${textColorClass}`}>{bank.swift}</p>
+                          <p className="text-sm text-muted-foreground">Moeda</p>
+                          <p className={`text-sm ${textColorClass}`}>
+                            {currencies.find(c => c.code === bank.currency)?.name || bank.currency}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Tipo</p>
+                          <p className={`text-sm ${textColorClass}`}>{bank.accountType}</p>
+                        </div>
+                      </div>
+                      {bank.phone && (
+                        <div>
+                          <p className="text-sm text-muted-foreground">Telefone</p>
+                          <p className={`text-sm ${textColorClass}`}>{bank.phone}</p>
+                        </div>
+                      )}
+                      {bank.address && (
+                        <div>
+                          <p className="text-sm text-muted-foreground">Endereço</p>
+                          <p className={`text-sm ${textColorClass}`}>{bank.address}</p>
                         </div>
                       )}
                       <div className="flex justify-end space-x-1 pt-2">
@@ -3809,7 +3911,10 @@ export default function CoffeeManagementSystem() {
                       <div>
                         <p className={`font-medium ${textColorClass}`}>{bank.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          Conta: {bank.accountNumber}
+                          Conta: {bank.accountNumber} | {bank.accountName}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {bank.accountType} | {currencies.find(c => c.code === bank.currency)?.name}
                         </p>
                       </div>
                       <div className="text-right">
